@@ -1,4 +1,3 @@
-#coding=utf-8
 import schedule
 import time
 import logging
@@ -8,7 +7,6 @@ from typing import Optional
 import os
 import sys
 
-# 添加當前目錄到Python路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from ptt_crawler import PTTCrawler
@@ -20,17 +18,10 @@ class PTTScheduler:
                  db_path: str = "ptt_articles.db",
                  pages_to_crawl: int = 30,
                  vector_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"):
-        """
-        初始化PTT排程器
-        
-        Args:
-            db_path: 資料庫路徑
-            pages_to_crawl: 每次爬取的頁數
-            vector_model_name: 詞向量模型名稱
-        """
-        self.db_path = db_path
-        self.pages_to_crawl = pages_to_crawl
-        self.vector_model_name = vector_model_name
+
+        self.db_path = db_path#db_path: 資料庫路徑
+        self.pages_to_crawl = pages_to_crawl  #每次爬取的頁數
+        self.vector_model_name = vector_model_name #詞向量模型名稱
         
         self.crawler = None
         self.db_manager = None
@@ -41,7 +32,6 @@ class PTTScheduler:
         self.init_components()
     
     def setup_logging(self):
-        """設定logging"""
         log_dir = "logs"
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
@@ -59,7 +49,6 @@ class PTTScheduler:
         self.logger = logging.getLogger(__name__)
     
     def init_components(self):
-        """初始化組件"""
         try:
             self.logger.info("正在初始化PTT排程器組件...")
             
@@ -80,7 +69,6 @@ class PTTScheduler:
             raise
     
     def daily_crawl_task(self):
-        """每日爬取任務"""
         try:
             self.logger.info("開始執行每日爬取任務")
             start_time = datetime.now()
@@ -139,7 +127,6 @@ class PTTScheduler:
             self.logger.error(f"每日爬取任務失敗: {e}")
     
     def manual_crawl(self, pages: Optional[int] = None):
-        """手動執行爬取任務"""
         if pages is None:
             pages = self.pages_to_crawl
         
@@ -147,8 +134,7 @@ class PTTScheduler:
         self.daily_crawl_task()
     
     def setup_schedule(self):
-        """設定排程"""
-        # 每日零時執行
+        # 每日零時執行爬蟲
         schedule.every().day.at("00:00").do(self.daily_crawl_task)
         
         # 也可以設定其他時間，例如：
@@ -158,7 +144,6 @@ class PTTScheduler:
         self.logger.info("排程設定完成：每日零時自動執行爬取任務")
     
     def start_scheduler(self):
-        """啟動排程器"""
         if self.is_running:
             self.logger.warning("排程器已在運行中")
             return
@@ -179,27 +164,23 @@ class PTTScheduler:
             self.stop_scheduler()
     
     def start_scheduler_background(self):
-        """在背景啟動排程器"""
         scheduler_thread = threading.Thread(target=self.start_scheduler, daemon=True)
         scheduler_thread.start()
         self.logger.info("PTT排程器已在背景啟動")
         return scheduler_thread
     
     def stop_scheduler(self):
-        """停止排程器"""
         self.is_running = False
         schedule.clear()
         self.logger.info("PTT排程器已停止")
     
     def get_next_run_time(self) -> Optional[datetime]:
-        """取得下次執行時間"""
         jobs = schedule.get_jobs()
         if jobs:
             return jobs[0].next_run
         return None
     
     def get_schedule_info(self) -> dict:
-        """取得排程資訊"""
         jobs = schedule.get_jobs()
         next_run = self.get_next_run_time()
         
@@ -211,14 +192,12 @@ class PTTScheduler:
         }
     
     def close(self):
-        """關閉排程器"""
         self.stop_scheduler()
         if self.db_manager:
             self.db_manager.close()
         self.logger.info("PTT排程器已關閉")
 
 def main():
-    """主函數"""
     print("PTT八卦版自動爬取排程器")
     print("=" * 50)
     
