@@ -1,4 +1,3 @@
-#coding=utf-8
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -21,7 +20,6 @@ class PTTCrawler:
         self.logger = logging.getLogger(__name__)
     
     def get_page_content(self, url):
-        """取得頁面內容"""
         try:
             response = self.session.get(url)
             response.raise_for_status()
@@ -31,7 +29,6 @@ class PTTCrawler:
             return None
     
     def parse_article_list(self, html_content):
-        """解析文章列表頁面"""
         soup = BeautifulSoup(html_content, 'html.parser')
         articles = []
         
@@ -75,7 +72,6 @@ class PTTCrawler:
         return articles
     
     def parse_article_content(self, html_content):
-        """解析文章內容"""
         soup = BeautifulSoup(html_content, 'html.parser')
         
         # 找到文章內容區域
@@ -99,7 +95,6 @@ class PTTCrawler:
         return content.strip()
     
     def crawl_daily_articles(self, pages=30):
-        """爬取每日前N頁文章"""
         self.logger.info(f"開始爬取PTT八卦版前{pages}頁文章")
         
         all_articles = []
@@ -151,7 +146,7 @@ class PTTCrawler:
         return all_articles
     
     def get_today_articles(self):
-        """取得今日文章（用於測試）"""
+    #測試用，取得今日文章
         return self.crawl_daily_articles(pages=1)
 
 if __name__ == "__main__":
