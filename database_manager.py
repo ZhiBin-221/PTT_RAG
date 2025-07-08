@@ -1,4 +1,3 @@
-#coding=utf-8
 import sqlite3
 import pandas as pd
 import numpy as np
@@ -48,7 +47,7 @@ class DatabaseManager:
             )
         ''')
         
-        # 建立索引以提高查詢效能
+        #索引
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_url ON articles(url)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_title ON articles(title)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_date ON articles(date)')
