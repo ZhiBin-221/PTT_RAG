@@ -6,7 +6,6 @@ from datetime import datetime
 import argparse
 from typing import Optional
 
-# 添加當前目錄到Python路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from ptt_crawler import PTTCrawler
@@ -17,12 +16,6 @@ from scheduler import PTTScheduler
 
 class PTTRAGMain:
     def __init__(self, db_path: str = r"C:\Users\BIN\Desktop\政大畢業\PTT_RAG_System_Output\ptt_articles.db"):
-        """
-        初始化PTT RAG主系統
-        
-        Args:
-            db_path: 資料庫路徑
-        """
         self.db_path = db_path
         self.setup_logging()
         
@@ -34,7 +27,6 @@ class PTTRAGMain:
         self.scheduler = None
     
     def setup_logging(self):
-        """設定logging"""
         log_dir = "logs"
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
@@ -52,42 +44,36 @@ class PTTRAGMain:
         self.logger = logging.getLogger(__name__)
     
     def init_crawler(self):
-        """初始化爬蟲"""
         if self.crawler is None:
             self.crawler = PTTCrawler()
             self.logger.info("PTT爬蟲初始化完成")
         return self.crawler
     
     def init_database(self):
-        """初始化資料庫"""
         if self.db_manager is None:
             self.db_manager = DatabaseManager(self.db_path)
             self.logger.info("資料庫管理器初始化完成")
         return self.db_manager
     
     def init_vector_processor(self):
-        """初始化詞向量處理器"""
         if self.vector_processor is None:
             self.vector_processor = VectorProcessor()
             self.logger.info("詞向量處理器初始化完成")
         return self.vector_processor
     
     def init_rag_system(self):
-        """初始化RAG系統"""
         if self.rag_system is None:
             self.rag_system = RAGSystem(db_path=self.db_path)
             self.logger.info("RAG系統初始化完成")
         return self.rag_system
     
     def init_scheduler(self):
-        """初始化排程器"""
         if self.scheduler is None:
             self.scheduler = PTTScheduler(db_path=self.db_path)
             self.logger.info("排程器初始化完成")
         return self.scheduler
     
     def crawl_articles(self, pages: int = 30):
-        """爬取文章並儲存到資料庫"""
         try:
             self.logger.info(f"開始爬取PTT八卦版前{pages}頁文章")
             
@@ -111,7 +97,6 @@ class PTTRAGMain:
             return 0
     
     def save_to_database(self, articles):
-        """儲存文章到資料庫"""
         try:
             self.logger.info("開始儲存文章到資料庫")
             
@@ -126,7 +111,6 @@ class PTTRAGMain:
             return 0
     
     def compute_vectors(self):
-        """計算詞向量"""
         try:
             self.logger.info("開始計算詞向量")
             
@@ -160,7 +144,7 @@ class PTTRAGMain:
             return 0
     
     def full_pipeline(self, pages: int = 30):
-        """執行完整流程：爬取 -> 儲存 -> 計算詞向量"""
+        #執行完整流程：爬取 -> 儲存 -> 計算詞向量
         try:
             self.logger.info("開始執行完整流程")
             start_time = datetime.now()
@@ -192,7 +176,6 @@ class PTTRAGMain:
             self.logger.error(f"完整流程執行失敗: {e}")
     
     def start_chat(self, top_k: int = 10):
-        """啟動聊天介面，支援指定top_k"""
         try:
             self.logger.info("啟動RAG聊天介面")
             rag_system = self.init_rag_system()
@@ -201,7 +184,7 @@ class PTTRAGMain:
             self.logger.error(f"啟動聊天介面失敗: {e}")
     
     def start_scheduler(self):
-        """啟動自動排程"""
+        #排程系統(測試中)
         try:
             self.logger.info("啟動自動排程")
             scheduler = self.init_scheduler()
@@ -210,7 +193,6 @@ class PTTRAGMain:
             self.logger.error(f"啟動排程器失敗: {e}")
     
     def show_statistics(self):
-        """顯示系統統計資訊"""
         try:
             db_manager = self.init_database()
             stats = db_manager.get_statistics()
@@ -234,7 +216,6 @@ class PTTRAGMain:
             self.logger.error(f"取得統計資訊失敗: {e}")
     
     def search_articles(self, keyword: str, limit: int = 10):
-        """搜尋文章"""
         try:
             db_manager = self.init_database()
             articles = db_manager.search_articles_by_keyword(keyword, limit)
@@ -252,7 +233,6 @@ class PTTRAGMain:
             self.logger.error(f"搜尋文章失敗: {e}")
     
     def close(self):
-        """關閉系統"""
         if self.db_manager:
             self.db_manager.close()
         if self.rag_system:
@@ -262,7 +242,6 @@ class PTTRAGMain:
         self.logger.info("PTT RAG主系統已關閉")
 
 def main():
-    """主函數"""
     parser = argparse.ArgumentParser(description="PTT八卦版RAG系統")
     parser.add_argument("--action", choices=["crawl", "vectors", "chat", "scheduler", "stats", "search", "full"], 
                        help="執行動作")
