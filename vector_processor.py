@@ -1,4 +1,3 @@
-#coding=utf-8
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import logging
@@ -7,22 +6,16 @@ import json
 
 class VectorProcessor:
     def __init__(self, model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"):
-        """
-        初始化詞向量處理器
-        使用多語言模型，適合處理中文內容
-        """
         self.model_name = model_name
         self.model = None
         self.setup_logging()
         self.load_model()
     
     def setup_logging(self):
-        """設定logging"""
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
         self.logger = logging.getLogger(__name__)
     
     def load_model(self):
-        """載入詞向量模型"""
         try:
             self.logger.info(f"正在載入詞向量模型: {self.model_name}")
             self.model = SentenceTransformer(self.model_name)
@@ -32,15 +25,6 @@ class VectorProcessor:
             raise
     
     def compute_vectors(self, texts: List[str]) -> np.ndarray:
-        """
-        計算文字列表的詞向量
-        
-        Args:
-            texts: 文字列表
-            
-        Returns:
-            numpy array: 詞向量矩陣
-        """
         if not texts:
             return np.array([])
         
@@ -54,15 +38,6 @@ class VectorProcessor:
             raise
     
     def compute_title_vector(self, title: str) -> List[float]:
-        """
-        計算標題的詞向量
-        
-        Args:
-            title: 文章標題
-            
-        Returns:
-            List[float]: 標題詞向量
-        """
         if not title or not title.strip():
             return []
         
@@ -74,15 +49,6 @@ class VectorProcessor:
             return []
     
     def compute_content_vector(self, content: str) -> List[float]:
-        """
-        計算內容的詞向量
-        
-        Args:
-            content: 文章內容
-            
-        Returns:
-            List[float]: 內容詞向量
-        """
         if not content or not content.strip():
             return []
         
@@ -113,15 +79,6 @@ class VectorProcessor:
             return []
     
     def split_content(self, content: str) -> List[str]:
-        """
-        將長內容分割成句子
-        
-        Args:
-            content: 文章內容
-            
-        Returns:
-            List[str]: 句子列表
-        """
         # 簡單的分句策略
         import re
         
@@ -134,32 +91,12 @@ class VectorProcessor:
         return sentences
     
     def compute_article_vectors(self, title: str, content: str) -> Tuple[List[float], List[float]]:
-        """
-        計算文章的標題和內容詞向量
-        
-        Args:
-            title: 文章標題
-            content: 文章內容
-            
-        Returns:
-            Tuple[List[float], List[float]]: (標題詞向量, 內容詞向量)
-        """
         title_vector = self.compute_title_vector(title)
         content_vector = self.compute_content_vector(content)
         
         return title_vector, content_vector
     
     def compute_similarity(self, vector1: List[float], vector2: List[float]) -> float:
-        """
-        計算兩個詞向量的相似度（餘弦相似度）
-        
-        Args:
-            vector1: 第一個詞向量
-            vector2: 第二個詞向量
-            
-        Returns:
-            float: 相似度分數 (0-1)
-        """
         if not vector1 or not vector2:
             return 0.0
         
@@ -175,17 +112,6 @@ class VectorProcessor:
             return 0.0
     
     def find_similar_articles(self, query_vector: List[float], article_vectors: List[Dict], top_k: int = 10) -> List[Dict]:
-        """
-        根據查詢向量找到相似的文章
-        
-        Args:
-            query_vector: 查詢詞向量
-            article_vectors: 文章向量列表，每個元素包含 id, title_vector, content_vector
-            top_k: 返回前k個最相似的文章
-            
-        Returns:
-            List[Dict]: 相似文章列表，包含相似度分數
-        """
         if not query_vector or not article_vectors:
             return []
         
@@ -212,15 +138,6 @@ class VectorProcessor:
         return similarities[:top_k]
     
     def batch_compute_vectors(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        批次計算多篇文章的詞向量
-        
-        Args:
-            articles: 文章列表，每個元素包含 id, title, content
-            
-        Returns:
-            List[Dict]: 包含詞向量的文章列表
-        """
         results = []
         
         for i, article in enumerate(articles):
