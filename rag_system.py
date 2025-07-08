@@ -1,4 +1,3 @@
-#coding=utf-8
 import json
 import logging
 from typing import List, Dict, Any, Optional
@@ -14,17 +13,10 @@ class RAGSystem:
                  taide_model_path: str = "taide/TAIDE-LX-7B-Chat",
                  db_path: str = "ptt_articles.db",
                  vector_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"):
-        """
-        初始化RAG系統
-        
-        Args:
-            taide_model_path: TAIDE模型路徑
-            db_path: 資料庫路徑
-            vector_model_name: 詞向量模型名稱
-        """
-        self.taide_model_path = taide_model_path
-        self.db_path = db_path
-        self.vector_model_name = vector_model_name
+
+        self.taide_model_path = taide_model_path#taide_model_path: TAIDE模型路徑
+        self.db_path = db_path#db_path: 資料庫路徑
+        self.vector_model_name = vector_model_name #vector_model_name: 詞向量模型名稱
         
         self.tokenizer = None
         self.model = None
@@ -40,7 +32,6 @@ class RAGSystem:
         self.logger = logging.getLogger(__name__)
     
     def load_components(self):
-        """載入所有組件"""
         try:
             # 載入TAIDE模型
             self.logger.info("正在載入TAIDE模型...")
@@ -67,16 +58,6 @@ class RAGSystem:
             raise
     
     def search_relevant_articles(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
-        """
-        搜尋相關文章
-        
-        Args:
-            query: 查詢文字
-            top_k: 返回前k個最相關的文章
-            
-        Returns:
-            List[Dict]: 相關文章列表
-        """
         try:
             # 計算查詢的詞向量
             query_vector = self.vector_processor.compute_title_vector(query)
@@ -131,15 +112,6 @@ class RAGSystem:
             return []
     
     def generate_context(self, relevant_articles: List[Dict[str, Any]]) -> str:
-        """
-        根據相關文章生成上下文
-        
-        Args:
-            relevant_articles: 相關文章列表
-            
-        Returns:
-            str: 生成的上下文
-        """
         if not relevant_articles:
             return ""
         
@@ -167,17 +139,6 @@ class RAGSystem:
         return "\n".join(context_parts)
     
     def TAIDE_Chat(self, input_text: str, use_rag: bool = True, top_k: int = 10) -> str:
-        """
-        使用TAIDE模型進行對話，可選擇是否使用RAG
-        
-        Args:
-            input_text: 輸入文字
-            use_rag: 是否使用RAG功能
-            top_k: RAG搜尋的文章數量
-            
-        Returns:
-            str: 模型回應
-        """
         try:
             device = "cuda" if torch.cuda.is_available() else "cpu"
             
@@ -198,7 +159,7 @@ class RAGSystem:
             
             # 準備對話格式
             messages = [
-                {"role": "system", "content": "你是一個有用的助手，專門回答關於PTT八卦版文章的問題。"},
+                {"role": "system", "content": "你是一個長年分析網路輿論的專家，專門回答關於PTT八卦版文章的問題。"},
                 {"role": "user", "content": enhanced_input}
             ]
             
@@ -225,12 +186,6 @@ class RAGSystem:
             return f"抱歉，處理您的問題時發生錯誤: {str(e)}"
     
     def get_system_statistics(self) -> Dict[str, Any]:
-        """
-        取得系統統計資訊
-        
-        Returns:
-            Dict: 系統統計資訊
-        """
         try:
             db_stats = self.db_manager.get_statistics()
             
@@ -246,7 +201,6 @@ class RAGSystem:
             return {}
     
     def interactive_chat(self):
-        """互動式聊天介面"""
         print("歡迎使用PTT八卦版RAG系統！")
         print("輸入 'exit' 退出，輸入 'stats' 查看統計資訊")
         print("-" * 50)
@@ -280,7 +234,6 @@ class RAGSystem:
                 print("-" * 50)
     
     def close(self):
-        """關閉系統"""
         if self.db_manager:
             self.db_manager.close()
         self.logger.info("RAG系統已關閉")
