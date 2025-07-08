@@ -8,6 +8,7 @@
 - 使用Sentence Transformers計算標題/內容詞向量
 - 整合TAIDE-LX-7B-Chat大型語言模型，實現RAG問答
 - 支援每日自動排程、批次處理與日誌記錄
+![image](https://github.com/user-attachments/assets/33fdc3d3-4b4c-4558-bfaa-c618bcaa7548)
 
 ## 專案結構
 ```
