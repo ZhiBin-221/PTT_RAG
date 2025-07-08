@@ -50,23 +50,6 @@ pip install -r requirements.txt
 - **資料庫**：SQLite，內建全文檢索與向量欄位
 - **硬體建議**：Python 3.8+，8GB RAM，CUDA GPU
 
-## 常見問題
-- CUDA記憶體不足：可切換CPU或減少batch size
-- 網路問題/模型下載失敗：請檢查連線或手動下載
-- 資料庫錯誤：檢查權限與磁碟空間
-
-## 資安與上傳建議
-- 已內建 .gitignore，會自動忽略：
-  - 資料庫檔案（如 .db, .sqlite3, ptt_articles.db）
-  - 日誌檔案（logs/、*.log）
-  - 個人化/暫存/快取檔（__pycache__/、.vscode/、.idea/ 等）
-  - 機器學習模型檔（*.bin, *.pt, *.ckpt 等）
-  - 環境與密鑰檔（.env, config.json, config.yaml 等）
-  - 你的本地路徑與個人資料夾（如政大畢業/、桌面提示/等）
-- 請勿將任何密碼、API金鑰、個人資料、真實資料庫檔案上傳至GitHub。
-- 若需分享設定，請提供範本（如 .env.example）。
-- 上傳前請再次檢查敏感資訊是否已排除。
 
 ## 貢獻與授權
 - 僅供學術研究與學習用途，請遵守PTT及相關網站規範
-- 歡迎提交Issue與PR改善專案 
