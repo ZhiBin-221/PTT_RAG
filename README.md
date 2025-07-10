@@ -51,6 +51,8 @@ pip install -r requirements.txt
 - **資料庫**：SQLite，內建全文檢索與向量欄位
 - **硬體建議**：Python 3.8+，8GB RAM，CUDA GPU
 
+##Future work
+- 目前釋出版本僅提供標題爬取功能，後續改良會以主文和內文方向前進
 
 ## 貢獻與授權
 - 僅供學術研究與學習用途，請遵守PTT及相關網站規範
